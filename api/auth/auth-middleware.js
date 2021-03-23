@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const atob = require('atob');
 const { JWT_SECRET } = require("../secrets"); // use this secret!
 
 const restricted = (req, res, next) => {
@@ -44,7 +45,11 @@ const only = role_name => (req, res, next) => {
 
     Pull the decoded token from the req object, to avoid verifying it again!
   */
-  next()
+  if (role_name === req.decodedJwt.role) {
+    next()
+  } else {
+    res.status(403).json({ message: 'This is not for you'})
+  }
 }
 
 
